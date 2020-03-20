@@ -9,10 +9,15 @@ use nss::compiler::*;
 
 fn main() {
     let test = r#"
--- KEBAB-CASE WORKING
+@variable = red
+
 body, h1
-    color: blue
-    background: url("assets/cool_image.jpg")!
+  color: blue
+  background: url("assets/cool_image.jpg")!
+
+
+a, button
+  color: @variable
     "#;
 
     let source = Source::from("<test>", test.lines().map(|x| x.into()).collect::<Vec<String>>());
@@ -34,7 +39,7 @@ body, h1
         Ok(ast) => {
             println!("{:#?}", ast);
 
-            let compiler = Compiler::new();
+            let mut compiler = Compiler::new();
 
             println!("---- output ----");
             println!("{}", compiler.compile(ast))

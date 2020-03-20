@@ -8,6 +8,7 @@ pub enum StatementNode {
     Expression(Expression),
     Definition(Vec<String>, Vec<Statement>),
     Style(String, Expression),
+    Var(String, Expression)
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -32,6 +33,7 @@ pub enum ExpressionNode {
     Call(Rc<Expression>, Vec<Expression>),
     Binary(Rc<Expression>, Operator, Rc<Expression>),
     Important(Rc<Expression>),
+    Deref(String),
     EOF,
 }
 

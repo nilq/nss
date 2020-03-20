@@ -1,13 +1,19 @@
 use super::parser::*;
 
-pub struct Compiler;
+use std::collections::HashMap;
+
+pub struct Compiler {
+    variables: HashMap<String, Expression>
+}
 
 impl Compiler {
     pub fn new() -> Self {
-        Self {}
+        Self {
+            variables: HashMap::new()
+        }
     }
 
-    pub fn compile(&self, ast: Vec<Statement>) -> String {
+    pub fn compile(&mut self, ast: Vec<Statement>) -> String {
         let mut output = String::new();
         
         for s in ast.iter() {
@@ -18,7 +24,7 @@ impl Compiler {
         output
     }
 
-    pub fn compile_statement(&self, statement: &Statement) -> String {
+    pub fn compile_statement(&mut self, statement: &Statement) -> String {
         use self::StatementNode::*;
         
         match statement.node {
@@ -44,7 +50,7 @@ impl Compiler {
                     )
                 }
 
-                result.push_str("}");
+                result.push_str("}\n\n");
 
                 result
             },
@@ -55,6 +61,11 @@ impl Compiler {
                 self.compile_expression(&expr)
             ),
 
+            Var(ref name, ref expr) => {
+                self.variables.insert(name.to_owned(), expr.clone());
+                String::new()
+            }
+
             _ => String::new(),
         }
     }
@@ -63,6 +74,7 @@ impl Compiler {
         use self::ExpressionNode::*;
 
         match expression.node {
+            Deref(ref n) => self.compile_expression(self.variables.get(n).unwrap()),
             Identifier(ref n) => format!("{}", n),
             Str(ref n) => format!("\"{}\"", n),
             Call(ref n, ref args) => {

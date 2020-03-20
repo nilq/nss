@@ -42,6 +42,45 @@ impl<'a> Parser<'a> {
         let position = self.current_position();
 
         let statement = match self.current_type() {
+            Symbol => match self.current_lexeme().as_str() {
+                "@" => {
+                    self.next()?;
+
+                    let name = self.eat_type(&Identifier)?;
+
+                    if self.current_lexeme() == "=" {
+                        self.next()?;
+
+                        Statement::new(
+                            StatementNode::Var(
+                                name,
+                                self.parse_expression()?
+                            ),
+                            self.span_from(position)
+                        )
+                    } else {
+                        Statement::new(
+                            StatementNode::Expression(
+                                Expression::new(
+                                    ExpressionNode::Deref(
+                                        name
+                                    ),
+                                    self.current_position()
+                                )
+                            ),
+                            self.current_position()
+                        )
+                    }
+                }
+
+                c => return Err(
+                    response!(
+                        Wrong(format!("unexpected symbol: `{}`", c)),
+                        self.source.file,
+                        self.current_position()
+                    )
+                )
+            }
             Identifier => {
                 let mut names = Vec::new();
 
@@ -81,9 +120,11 @@ impl<'a> Parser<'a> {
 
                         let definitions = self.parse_body()?;
 
-                        Statement::new(
-                            StatementNode::Definition(names, definitions),
-                            self.span_from(position)
+                        return Ok(
+                            Statement::new(
+                                StatementNode::Definition(names, definitions),
+                                self.span_from(position)
+                            )
                         )
                     },
 
@@ -191,6 +232,29 @@ impl<'a> Parser<'a> {
                     ExpressionNode::Identifier(self.eat()?),
                     position
                 ),
+
+                Symbol => match self.current_lexeme().as_str() {
+                    "@" => {
+                        self.next()?;
+
+                        Expression::new(
+                            ExpressionNode::Deref(
+                                self.eat_type(&Identifier)?
+                            ),
+                            self.current_position()
+                        )
+                    },
+
+                    c => return Err(
+                        response!(
+                            Wrong(
+                                format!("unexpected symbol `{}`", c),
+                            ),
+                            self.source.file,
+                            self.current_position()
+                        )
+                    )
+                },
 
                 ref tt => {
                     return Err(
