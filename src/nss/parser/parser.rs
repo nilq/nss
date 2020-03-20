@@ -107,7 +107,6 @@ impl<'a> Parser<'a> {
         };
 
         if self.remaining() > 1 {
-            println!("{}", self.remaining());
             self.new_line()?;
         }
 

@@ -5,13 +5,14 @@ mod nss;
 use nss::lexer::*;
 use nss::source::Source;
 use nss::parser::*;
+use nss::compiler::*;
 
 fn main() {
     let test = r#"
 -- KEBAB-CASE WORKING
 body, h1
-    color: a
-    background: url(cool_image)!
+    color: blue
+    background: url("assets/cool_image.jpg")!
     "#;
 
     let source = Source::from("<test>", test.lines().map(|x| x.into()).collect::<Vec<String>>());
@@ -30,8 +31,13 @@ body, h1
     let mut parser = Parser::new(tokens, &source);
 
     match parser.parse() {
-        Ok(ref ast) => {
+        Ok(ast) => {
             println!("{:#?}", ast);
+
+            let compiler = Compiler::new();
+
+            println!("---- output ----");
+            println!("{}", compiler.compile(ast))
         }
 
         _ => return
