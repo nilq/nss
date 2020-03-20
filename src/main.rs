@@ -10,10 +10,11 @@ use nss::compiler::*;
 fn main() {
     let test = r#"
 @variable = red
+@cool_image = "/assets/cool_image.jpeg"
 
 body, h1
   color: blue
-  background: url("assets/cool_image.jpg")!
+  background: url(@cool_image)!
 
 
 a, button
