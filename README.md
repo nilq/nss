@@ -1,4 +1,4 @@
-# nss
+# Niels Style Sheets
 
 Making a new CSS super-set in one quarantine evening.
 
