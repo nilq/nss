@@ -5,7 +5,7 @@ Making a new CSS super-set in one quarantine evening.
 ## Syntax
 
 `test.nss`
-```py
+```rb
 @variable = red
 @cool_image = "/assets/cool_image.jpeg"
 
