@@ -1,6 +1,6 @@
-a = blue
-cool_image = "/assets/cool.jpeg"
+@a = blue
+@cool_image = "/assets/cool.jpeg"
 
 body
-    color: a
-    background: url(cool_image)!
+    color: @a
+    background: url(@cool_image)!
