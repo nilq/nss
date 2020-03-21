@@ -35,6 +35,7 @@ a, button {
 
 - Start: March 20, 22:03
 - End: March 21, 00:55
+- [Timelapse](https://youtu.be/ptUrWxCejWA)
 
 ## License
 
