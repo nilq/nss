@@ -1,6 +1,9 @@
-@a = blue
-@cool_image = "/assets/cool.jpeg"
+@variable = red
+@cool_image = "/assets/cool_image.jpeg"
 
-body
-    color: @a
-    background: url(@cool_image)!
+body, h1
+  color: blue
+  background: url(@cool_image)!
+
+a, button
+  color: @variable
